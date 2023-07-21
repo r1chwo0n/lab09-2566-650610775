@@ -10,21 +10,16 @@ import { useState } from "react";
 export default function Home() {
   //tasks = array of {id: string, title: string, completed: boolean}
   const [tasks, setTasks] = useState([]);
-  const [count, setCount] = useState(0);
-  const [countCom, setCountCom] = useState(0);
 
   const addTask = (newTaskTitle) => {
     const newTask = { id: nanoid(), title: newTaskTitle, completed: false };
     const newTasks = [...tasks, newTask];
     setTasks(newTasks);
-    setCount(count + 1);
   };
 
   const deleteTask = (taskId) => {
     const newTasks = tasks.filter((task) => task.id !== taskId);
     setTasks(newTasks);
-    setCount(count - 1);
-    if (countCom !== 0) setCountCom(countCom - 1);
   };
 
   const toggleDoneTask = (taskId) => {
@@ -33,12 +28,6 @@ export default function Home() {
     const newTasks = structuredClone(tasks);
     //search for a task based on condition
     const task = newTasks.find((x) => x.id === taskId);
-    if (task.completed === false) setCountCom(countCom + 1);
-    else {
-      if (countCom !== 0) {
-        setCountCom(countCom - 1);
-      }
-    }
     task.completed = !task.completed;
     setTasks(newTasks);
   };
@@ -54,7 +43,8 @@ export default function Home() {
       <div style={{ maxWidth: "400px" }} className="mx-auto">
         {/* Task summary */}
         <p className="text-center text-secondary fst-italic">
-          All ({count}) Done ({countCom})
+          All ({tasks.length}) Done (
+          {tasks.filter((task) => task.completed).length})
         </p>
         {/* task input */}
         <TaskInput addTaskFunc={addTask} />
